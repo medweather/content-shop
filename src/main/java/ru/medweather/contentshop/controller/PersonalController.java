@@ -8,27 +8,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.medweather.contentshop.model.Content;
 import ru.medweather.contentshop.model.Person;
-import ru.medweather.contentshop.repos.ContentRepo;
+import ru.medweather.contentshop.service.PersonalService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("personal-content")
 public class PersonalController {
 
-    private final ContentRepo contentRepo;
+    private final PersonalService personalService;
 
     @Autowired
-    public PersonalController(ContentRepo contentRepo) {
-        this.contentRepo = contentRepo;
+    public PersonalController(PersonalService personalService) {
+        this.personalService = personalService;
     }
 
     @GetMapping
-    public List<Content> personContents(@AuthenticationPrincipal Person person) {
-        return contentRepo.findAll().stream()
-                .filter(pC -> pC.getPerson() != null && pC.getPerson().getId().equals(person.getId()))
-                .collect(Collectors.toList());
+    public List<Content> personContents(
+            @AuthenticationPrincipal Person person
+    ) {
+        return personalService.getContents(person);
     }
 
     @GetMapping("{id}")
@@ -42,13 +41,6 @@ public class PersonalController {
     public List<Content> afterDelete(
             @PathVariable("id") Content content,
             @AuthenticationPrincipal Person person) {
-        List<Content> personCont = contentRepo.findAll().stream()
-                .filter(pC -> pC.getPerson() != null && pC.getPerson().getId().equals(person.getId()))
-                .collect(Collectors.toList());
-        if(personCont.contains(content)) {
-            content.setPerson(null);
-            content.setBought(false);
-        }
-        return personCont;
+        return personalService.listAfterDelete(content, person);
     }
 }

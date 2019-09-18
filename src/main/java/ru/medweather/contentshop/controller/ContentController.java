@@ -2,28 +2,30 @@ package ru.medweather.contentshop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.medweather.contentshop.model.Content;
 import ru.medweather.contentshop.model.Person;
-import ru.medweather.contentshop.repos.ContentRepo;
+import ru.medweather.contentshop.service.ContentService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("content")
 public class ContentController {
 
-    private final ContentRepo contentRepo;
+    private final ContentService contentService;
 
     @Autowired
-    public ContentController(ContentRepo contentRepo) {
-        this.contentRepo = contentRepo;
+    public ContentController(ContentService contentService) {
+        this.contentService = contentService;
     }
 
     @GetMapping
     public List<Content> listContents() {
-        return contentRepo.findAll();
+        return contentService.getContents();
     }
 
     @GetMapping("{id}")
@@ -38,11 +40,7 @@ public class ContentController {
             @PathVariable("id") Content content,
             @AuthenticationPrincipal Person person
     ) {
-        if(!content.isBought()) {
-            content.setPerson(person);
-            content.setBought(true);
-            return contentRepo.save(content);
-        }
-        return content;
+        return contentService.buyContent(content, person);
     }
+
 }
