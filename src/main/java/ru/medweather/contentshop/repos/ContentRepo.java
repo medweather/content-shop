@@ -1,7 +1,7 @@
 package ru.medweather.contentshop.repos;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.medweather.contentshop.model.Content;
 
-public interface ContentRepo extends CrudRepository<Content, Long> {
+public interface ContentRepo extends JpaRepository<Content, Long> {
 }

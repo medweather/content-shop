@@ -1,32 +1,19 @@
 package ru.medweather.contentshop.model;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Collection;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "person")
-public class Person implements UserDetails {
+public class Person implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @NotNull
-    private String username;
-    @NotNull
-    private String password;
-    private boolean active;
+    private String id;
+    private String name;
+    private String email;
+    private String gender;
+    private String locale;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "person_role", joinColumns = @JoinColumn(name = "person_id"))
@@ -36,85 +23,52 @@ public class Person implements UserDetails {
     public Person() {
     }
 
-    public Person(String firstName, String lastName, String username, String password, boolean active) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.active = active;
+    public Person(String name, String email, String gender, String locale, Set<Role> roles) {
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.locale = locale;
+        this.roles = roles;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+    public String getGender() {
+        return gender;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
+    public String getLocale() {
+        return locale;
     }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return isActive();
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     public Set<Role> getRoles() {
