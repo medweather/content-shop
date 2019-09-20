@@ -49,6 +49,7 @@
                     axios.get(this.url.contentDel).then((response) => {
                         console.log(this);
                         this.contentDel = response.data;
+                        window.location.href = '/personal-account/';
                         alert('контент успешно удален!');
                     });
                 }

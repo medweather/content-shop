@@ -40,7 +40,9 @@
                 });
                 document.addEventListener('keydown', function (ev) {
                     if(ev.key == '2')
-                        oneAll.buy();
+                        <#if content.bought == false>
+                            oneAll.buy();
+                        </#if>
                     if(ev.key == '3')
                         window.location.href = '/personal-account/';
                     if(ev.key == '1')
@@ -54,6 +56,7 @@
                     axios.get(this.url.contentBuy).then((response) => {
                         console.log(this);
                         this.contentBuy = response.data;
+                        window.location.href = '/all-contents/';
                         alert('контент успешно приобретен!');
                     });
                 },
